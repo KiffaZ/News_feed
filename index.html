@@ -1,0 +1,230 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <title></title>
+  <meta name="Generator" content="Cocoa HTML Writer">
+  <meta name="CocoaVersion" content="2566">
+  <style type="text/css">
+    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000}
+    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000; min-height: 14.0px}
+    span.s1 {font-kerning: none}
+  </style>
+</head>
+<body>
+<p class="p1"><span class="s1">&lt;!DOCTYPE html&gt;</span></p>
+<p class="p1"><span class="s1">&lt;html lang="ru" class="dark"&gt;</span></p>
+<p class="p1"><span class="s1">&lt;head&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>&lt;meta charset="UTF-8"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>&lt;title&gt;RSS Новости — свежие новости из топ-агентств&lt;/title&gt;</span></p>
+<p class="p2"><span class="s1"><span class="Apple-converted-space">  </span></span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>&lt;script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"&gt;&lt;/script&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>&lt;link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"&gt;</span></p>
+<p class="p2"><span class="s1"><span class="Apple-converted-space">  </span></span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>&lt;style&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>.news-card { transition: all 0.2s; }</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>.news-card:hover { transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1); }</span></p>
+<p class="p2"><span class="s1"><span class="Apple-converted-space">    </span></span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>.ad-placeholder {<span class="Apple-converted-space"> </span></span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>background: linear-gradient(90deg, #f3e8ff 0%, #e0f2fe 100%);<span class="Apple-converted-space"> </span></span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>border: 2px dashed #a855f7;<span class="Apple-converted-space"> </span></span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>.dark .ad-placeholder {<span class="Apple-converted-space"> </span></span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>background: linear-gradient(90deg, #4c1d95 0%, #1e3a8a 100%);<span class="Apple-converted-space"> </span></span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>border-color: #c026d3;<span class="Apple-converted-space"> </span></span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>&lt;/style&gt;</span></p>
+<p class="p1"><span class="s1">&lt;/head&gt;</span></p>
+<p class="p1"><span class="s1">&lt;body class="bg-gray-50 dark:bg-zinc-950 text-gray-900 dark:text-gray-100 min-h-screen"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>&lt;!-- HEADER --&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>&lt;header class="sticky top-0 bg-white dark:bg-zinc-900 border-b border-gray-200 dark:border-zinc-800 z-50"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>&lt;div class="flex items-center gap-3"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;i class="fa-solid fa-rss text-3xl text-purple-600"&gt;&lt;/i&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;h1 class="text-2xl font-bold tracking-tight"&gt;RSS Новости&lt;/h1&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</span></p>
+<p class="p2"><span class="s1"><span class="Apple-converted-space">      </span></span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>&lt;div class="flex items-center gap-4"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;button onclick="refreshNews()"<span class="Apple-converted-space"> </span></span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>class="flex items-center gap-2 px-5 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-2xl font-medium transition"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">          </span>&lt;i class="fa-solid fa-rotate"&gt;&lt;/i&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">          </span>&lt;span&gt;Обновить&lt;/span&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;/button&gt;</span></p>
+<p class="p2"><span class="s1"><span class="Apple-converted-space">        </span></span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;button onclick="toggleTheme()" id="theme-btn"<span class="Apple-converted-space"> </span></span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>class="w-10 h-10 flex items-center justify-center rounded-2xl hover:bg-gray-100 dark:hover:bg-zinc-800 transition"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">          </span>&lt;i id="theme-icon" class="fa-solid fa-moon text-xl"&gt;&lt;/i&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;/button&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>&lt;/header&gt;</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>&lt;div class="max-w-7xl mx-auto px-4 py-8 grid grid-cols-1 lg:grid-cols-12 gap-8"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;div class="lg:col-span-8"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>&lt;div id="loading" class="text-center py-12"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;i class="fa-solid fa-spinner fa-spin text-4xl text-purple-600"&gt;&lt;/i&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;p class="mt-4 text-lg"&gt;Загружаем свежие новости...&lt;/p&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>&lt;div id="news-container" class="space-y-6"&gt;&lt;/div&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;div class="lg:col-span-4 space-y-8"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>&lt;div class="ad-placeholder rounded-3xl p-6 text-center h-96 flex flex-col items-center justify-center"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;p class="text-purple-600 dark:text-purple-400 text-sm font-medium mb-2"&gt;Место для рекламы Яндекс.РСЯ&lt;/p&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;p class="text-xs text-gray-500 dark:text-gray-400"&gt;Вертикальный блок&lt;/p&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>&lt;div class="bg-white dark:bg-zinc-900 rounded-3xl p-6 border border-gray-200 dark:border-zinc-800"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;h3 class="font-semibold mb-4 flex items-center gap-2"&gt;&lt;i class="fa-solid fa-list"&gt;&lt;/i&gt; Источники&lt;/h3&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;div id="sources-list" class="text-sm space-y-2"&gt;&lt;/div&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>&lt;div class="ad-placeholder rounded-3xl p-8 text-center"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;p class="text-purple-600 dark:text-purple-400 text-sm font-medium"&gt;Горизонтальный блок РСЯ&lt;/p&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>&lt;footer class="bg-white dark:bg-zinc-900 border-t border-gray-200 dark:border-zinc-800 py-8 text-center text-sm text-gray-500 dark:text-gray-400"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;p&gt;Автоматическая лента RSS • Обновляется каждые 10 минут&lt;/p&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>&lt;/footer&gt;</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>&lt;script&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>const feeds = [</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>{ name: "Лента.ру", url: "https://lenta.ru/rss/news" },</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>{ name: "РИА Новости", url: "https://ria.ru/export/rss2/all/index.xml" },</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>{ name: "РБК", url: "https://rssexport.rbc.ru/rbcnews/news/30/full.rss" },</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>{ name: "ТАСС", url: "https://tass.ru/rss/v2.xml" },</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>{ name: "Коммерсантъ", url: "https://www.kommersant.ru/RSS/news.xml" },</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>{ name: "Газета.Ru", url: "https://www.gazeta.ru/export/rss2/all/index.xml" }</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>];</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>const CORS_PROXY = "https://api.allorigins.win/get?url=";</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>// Безопасная работа с localStorage</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>function safeLocalStorageGet(key, defaultValue = null) {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>try {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>const value = localStorage.getItem(key);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>return value !== null ? value : defaultValue;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>} catch (e) {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>return defaultValue;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>}</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>function safeLocalStorageSet(key, value) {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>try {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>localStorage.setItem(key, value);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>} catch (e) {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>// Игнорируем ошибку (например, при file://)</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>}</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>function toggleTheme() {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>document.documentElement.classList.toggle("dark");</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>const isDark = document.documentElement.classList.contains("dark");</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>document.getElementById("theme-icon").className = isDark<span class="Apple-converted-space"> </span></span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>? "fa-solid fa-sun text-xl"<span class="Apple-converted-space"> </span></span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>: "fa-solid fa-moon text-xl";</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>safeLocalStorageSet("theme", isDark ? "dark" : "light");</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>}</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>async function loadNews() {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>const container = document.getElementById("news-container");</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>const loading = document.getElementById("loading");</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>container.innerHTML = "";</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>loading.style.display = "block";</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>let allNews = [];</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>const sourcesShown = new Set();</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>for (const feed of feeds) {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>try {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">          </span>const response = await fetch(CORS_PROXY + encodeURIComponent(feed.url));</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">          </span>const data = await response.json();</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">          </span>const parser = new DOMParser();</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">          </span>const doc = parser.parseFromString(data.contents, "text/xml");</span></p>
+<p class="p2"><span class="s1"><span class="Apple-converted-space">          </span></span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">          </span>const items = doc.querySelectorAll("item");</span></p>
+<p class="p2"><span class="s1"><span class="Apple-converted-space">          </span></span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">          </span>items.forEach(item =&gt; {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>const title = item.querySelector("title")?.textContent || "Без заголовка";</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>const link = item.querySelector("link")?.textContent || "#";</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>let description = (item.querySelector("description")?.textContent || "").replace(/&lt;[^&gt;]+&gt;/g, "").slice(0, 160);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>if (description) description += "...";</span></p>
+<p class="p2"><span class="s1"><span class="Apple-converted-space">            </span></span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>const pubDate = item.querySelector("pubDate")?.textContent || "";</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>const date = pubDate ? new Date(pubDate) : new Date();</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>allNews.push({ title, link, description, date, source: feed.name, timestamp: date.getTime() });</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>sourcesShown.add(feed.name);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">          </span>});</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>} catch(e) {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">          </span>console.warn("Не удалось загрузить:", feed.name);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>}</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>allNews.sort((a, b) =&gt; b.timestamp - a.timestamp);</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>// Убираем дубликаты</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>const seen = new Set();</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>const uniqueNews = allNews.filter(news =&gt; {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>if (seen.has(news.title)) return false;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>seen.add(news.title);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>return true;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>});</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>loading.style.display = "none";</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>uniqueNews.slice(0, 40).forEach((news, index) =&gt; {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>const card = document.createElement("div");</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>card.className = "news-card bg-white dark:bg-zinc-900 rounded-3xl p-6 border border-gray-200 dark:border-zinc-800";</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>card.innerHTML = `</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">          </span>&lt;div class="flex justify-between text-xs mb-3"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;span class="px-3 py-1 bg-purple-100 dark:bg-purple-900 text-purple-700 dark:text-purple-300 rounded-full"&gt;${news.source}&lt;/span&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;span class="text-gray-500"&gt;${news.date.toLocaleDateString('ru-RU')} ${news.date.toLocaleTimeString('ru-RU', {hour:'2-digit', minute:'2-digit'})}&lt;/span&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">          </span>&lt;/div&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">          </span>&lt;a href="${news.link}" target="_blank" class="block hover:text-purple-600 dark:hover:text-purple-400 transition-colors"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;h2 class="text-xl font-semibold leading-tight mb-3"&gt;${news.title}&lt;/h2&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;p class="text-gray-600 dark:text-gray-400"&gt;${news.description || ''}&lt;/p&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">          </span>&lt;/a&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>`;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>container.appendChild(card);</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>if ((index + 1) % 5 === 0) {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">          </span>const ad = document.createElement("div");</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">          </span>ad.className = "ad-placeholder rounded-3xl p-6 my-8 text-center";</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">          </span>ad.innerHTML = `&lt;p class="text-purple-600 dark:text-purple-400 text-sm font-medium"&gt;Место под блок Яндекс.РСЯ&lt;/p&gt;`;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">          </span>container.appendChild(ad);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>});</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>document.getElementById("sources-list").innerHTML = Array.from(sourcesShown)</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.map(s =&gt; `&lt;div class="flex items-center gap-2"&gt;&lt;i class="fa-solid fa-check text-green-500"&gt;&lt;/i&gt; ${s}&lt;/div&gt;`).join("");</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>}</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>function refreshNews() {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>loadNews();</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>}</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>// Инициализация</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>window.onload = () =&gt; {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>// Восстанавливаем тему безопасно</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>if (safeLocalStorageGet("theme") === "light") {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>document.documentElement.classList.remove("dark");</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>document.getElementById("theme-icon").className = "fa-solid fa-moon text-xl";</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>} else {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>document.getElementById("theme-icon").className = "fa-solid fa-sun text-xl";</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>}</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>loadNews();</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>// Автообновление каждые 10 минут</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>setInterval(loadNews, 600000);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>};</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>&lt;/script&gt;</span></p>
+<p class="p1"><span class="s1">&lt;/body&gt;</span></p>
+<p class="p1"><span class="s1">&lt;/html&gt;</span></p>
+</body>
+</html>
