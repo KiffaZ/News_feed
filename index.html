@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Свежие Новости</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+<style>
+.news-card{
+transition:.3s;
+}
+.news-card:hover{
+transform:translateY(-6px);
+box-shadow:0 25px 50px -12px rgb(0 0 0 / .2);
+}
+
+.news-image{
+aspect-ratio:1/1;
+object-fit:cover;
+border-radius:1.5rem;
+}
+
+.ad-placeholder{
+background:linear-gradient(145deg,#f8fafc,#f1f5f9);
+border:1px solid #e2e8f0;
+}
+.dark .ad-placeholder{
+background:linear-gradient(145deg,#1f2937,#111827);
+border-color:#374151;
+}
+</style>
+</head>
+
+<body class="bg-zinc-50 dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100">
+
+<!-- HEADER -->
+<header class="sticky top-0 bg-white/80 dark:bg-neutral-900/80 backdrop-blur border-b z-50">
+<div class="max-w-7xl mx-auto px-6 py-5 flex justify-between">
+
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 bg-gradient-to-br from-violet-500 to-indigo-600 rounded-2xl flex items-center justify-center">
+<i class="fa-solid fa-rss text-white"></i>
+</div>
+<h1 class="text-3xl font-semibold tracking-tight">Свежие</h1>
+</div>
+
+<div class="flex gap-4">
+
+<select id="regionFilter"
+class="px-4 py-2 rounded-xl bg-neutral-200 dark:bg-neutral-800">
+<option value="all">Все СМИ</option>
+<option value="ru">🇷🇺 РФ СМИ</option>
+<option value="west">🌍 Западные СМИ</option>
+</select>
+
+<button onclick="refreshNews()"
+class="px-5 py-2 rounded-3xl bg-black text-white dark:bg-white dark:text-black">
+<i class="fa-solid fa-rotate"></i>
+</button>
+
+<button onclick="toggleTheme()"
+class="w-10 h-10">
+<i id="theme-icon" class="fa-solid fa-moon"></i>
+</button>
+
+</div>
+</div>
+</header>
+
+<div class="max-w-7xl mx-auto px-6 py-10 grid lg:grid-cols-12 gap-10">
+
+<div class="lg:col-span-8">
+<div id="loading" class="text-center py-20">
+<i class="fa-solid fa-spinner fa-spin text-4xl"></i>
+</div>
+
+<div id="news-container" class="space-y-8"></div>
+</div>
+
+<div class="lg:col-span-4 space-y-8">
+
+<div class="ad-placeholder rounded-3xl p-8 text-center h-64">
+Реклама
+</div>
+
+<div class="bg-white dark:bg-neutral-900 rounded-3xl p-6 border">
+<h3 class="mb-4 text-sm uppercase text-neutral-400">Источники</h3>
+<div id="sources-list" class="space-y-2 text-sm"></div>
+</div>
+
+</div>
+</div>
+
+<footer class="text-center text-xs py-10 opacity-60">
+News Feed 4.0 • автообновление 10 мин
+</footer>
+
+<script>
+/* =========================
+   THEME FIX (РАБОТАЕТ)
+========================= */
+
+function toggleTheme(){
+document.documentElement.classList.toggle("dark");
+
+localStorage.theme =
+document.documentElement.classList.contains("dark")
+? "dark" : "light";
+
+updateIcon();
+}
+
+function updateIcon(){
+const icon=document.getElementById("theme-icon");
+icon.className=document.documentElement.classList.contains("dark")
+? "fa-solid fa-sun"
+: "fa-solid fa-moon";
+}
+
+if(localStorage.theme==="dark"){
+document.documentElement.classList.add("dark");
+}
+updateIcon();
+
+
+/* =========================
+   RSS SOURCES
+========================= */
+
+const feeds=[
+{url:"https://lenta.ru/rss",region:"ru"},
+{url:"https://ria.ru/export/rss2/archive/index.xml",region:"ru"},
+{url:"https://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml",region:"west"},
+{url:"https://feeds.bbci.co.uk/news/rss.xml",region:"west"}
+];
+
+let allNews=[];
+
+
+/* =========================
+   LOAD NEWS FAST
+========================= */
+
+async function loadNews(){
+
+document.getElementById("loading").style.display="block";
+allNews=[];
+
+await Promise.all(
+feeds.map(async feed=>{
+try{
+const proxy=`https://api.allorigins.win/raw?url=${encodeURIComponent(feed.url)}`;
+const res=await fetch(proxy);
+const xml=await res.text();
+
+const doc=new DOMParser().parseFromString(xml,"text/xml");
+
+doc.querySelectorAll("item").forEach(item=>{
+allNews.push({
+title:item.querySelector("title")?.textContent,
+link:item.querySelector("link")?.textContent,
+date:new Date(item.querySelector("pubDate")?.textContent),
+img:extractImage(item),
+source:new URL(feed.url).hostname,
+region:feed.region
+});
+});
+
+}catch(e){
+console.log("RSS error",feed.url);
+}
+})
+);
+
+renderNews();
+renderSources();
+
+document.getElementById("loading").style.display="none";
+}
+
+
+/* =========================
+   IMAGE PARSER FIX
+========================= */
+
+function extractImage(item){
+
+let media=item.getElementsByTagName("media:content")[0];
+if(media) return media.getAttribute("url");
+
+let enc=item.getElementsByTagName("enclosure")[0];
+if(enc) return enc.getAttribute("url");
+
+let desc=item.querySelector("description")?.textContent||"";
+let match=desc.match(/<img.*?src="(.*?)"/);
+return match?match[1]:"https://picsum.photos/600";
+}
+
+
+/* =========================
+   FILTER SYSTEM
+========================= */
+
+function renderNews(){
+
+const filter=document.getElementById("regionFilter").value;
+
+let news=allNews
+.filter(n=>filter==="all"||n.region===filter)
+.sort((a,b)=>b.date-a.date)
+.slice(0,40);
+
+const container=document.getElementById("news-container");
+
+container.innerHTML=news.map(n=>`
+<a href="${n.link}" target="_blank"
+class="news-card block bg-white dark:bg-neutral-900 p-6 rounded-3xl">
+
+<div class="grid md:grid-cols-3 gap-6 items-center">
+
+<img src="${n.img}"
+class="news-image w-full">
+
+<div class="md:col-span-2">
+<h2 class="text-xl font-semibold mb-3">${n.title}</h2>
+
+<p class="text-sm opacity-60">
+${n.source} • ${n.date.toLocaleString()}
+</p>
+</div>
+
+</div>
+</a>
+`).join("");
+}
+
+document.getElementById("regionFilter")
+.addEventListener("change",renderNews);
+
+
+/* =========================
+   SOURCES LIST
+========================= */
+
+function renderSources(){
+
+const list=[...new Set(allNews.map(n=>n.source))];
+
+document.getElementById("sources-list").innerHTML=
+list.map(s=>`<div>${s}</div>`).join("");
+}
+
+
+/* =========================
+   REFRESH
+========================= */
+
+function refreshNews(){
+loadNews();
+}
+
+loadNews();
+setInterval(loadNews,600000);
+
+</script>
+</body>
+</html>
