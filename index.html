@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<title>News Feed</title>
+
+<style>
+
+/* ===== THEMES ===== */
+
+:root{
+--bg:#ffffff;
+--text:#111;
+--card:#f3f4f6;
+--accent:#2563eb;
+}
+
+body.dark{
+--bg:#0f172a;
+--text:#ffffff;
+--card:#1e293b;
+--accent:#60a5fa;
+}
+
+body{
+margin:0;
+font-family:system-ui,Arial;
+background:var(--bg);
+color:var(--text);
+transition:.3s;
+}
+
+/* ===== HEADER ===== */
+
+header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:18px;
+font-size:22px;
+font-weight:bold;
+border-bottom:1px solid #ccc3;
+}
+
+.controls{
+display:flex;
+gap:10px;
+}
+
+button{
+background:var(--accent);
+color:white;
+border:none;
+padding:8px 14px;
+border-radius:8px;
+cursor:pointer;
+}
+
+button:hover{opacity:.85}
+
+/* ===== NEWS ===== */
+
+.container{
+max-width:850px;
+margin:auto;
+padding:15px;
+}
+
+.news{
+background:var(--card);
+margin:14px 0;
+padding:16px;
+border-radius:10px;
+display:flex;
+gap:14px;
+transition:.2s;
+}
+
+.news:hover{
+transform:translateY(-2px);
+}
+
+.news img{
+width:120px;
+height:80px;
+object-fit:cover;
+border-radius:8px;
+}
+
+.news a{
+color:var(--accent);
+font-size:18px;
+font-weight:bold;
+text-decoration:none;
+}
+
+.meta{
+font-size:13px;
+opacity:.7;
+margin-top:6px;
+}
+
+#status{
+text-align:center;
+opacity:.6;
+margin-top:10px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+<div>📰 News Feed</div>
+
+<div class="controls">
+<button onclick="toggleTheme()">🌗 Тема</button>
+<button onclick="loadNews()">↻ Обновить</button>
+</div>
+</header>
+
+<div id="status">Загрузка новостей...</div>
+
+<div class="container" id="news"></div>
+
+<script>
+
+/* ===== THEME ===== */
+
+function toggleTheme(){
+document.body.classList.toggle("dark");
+localStorage.setItem(
+"theme",
+document.body.classList.contains("dark")?"dark":"light"
+);
+}
+
+if(localStorage.getItem("theme")==="dark")
+document.body.classList.add("dark");
+
+/* ===== SOURCES ===== */
+
+const SOURCES=[
+"https://feeds.bbci.co.uk/news/rss.xml",
+"https://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml"
+];
+
+const PROXIES=[
+u=>"https://api.allorigins.win/raw?url="+encodeURIComponent(u),
+u=>"https://corsproxy.io/?"+encodeURIComponent(u),
+u=>"https://api.codetabs.com/v1/proxy?quest="+encodeURIComponent(u)
+];
+
+/* ===== FETCH ===== */
+
+async function fetchWithFallback(url){
+
+for(const proxy of PROXIES){
+try{
+const r=await fetch(proxy(url));
+if(!r.ok) continue;
+
+const text=await r.text();
+
+if(text.includes("<html")) continue;
+
+return text;
+}catch(e){}
+}
+
+throw "proxy fail";
+}
+
+async function fetchRSS(url){
+
+try{
+const xmlText=await fetchWithFallback(url);
+
+const xml=new DOMParser()
+.parseFromString(xmlText,"text/xml");
+
+return [...xml.querySelectorAll("item")].map(item=>({
+
+title:item.querySelector("title")?.textContent,
+link:item.querySelector("link")?.textContent,
+date:item.querySelector("pubDate")?.textContent,
+img:item.querySelector("media\\:thumbnail, enclosure")?.getAttribute("url")
+
+}));
+
+}catch{
+return [];
+}
+
+}
+
+/* ===== LOAD NEWS ===== */
+
+async function loadNews(){
+
+const box=document.getElementById("news");
+const status=document.getElementById("status");
+
+status.textContent="Обновление...";
+box.innerHTML="";
+
+let all=[];
+
+for(const src of SOURCES){
+all=all.concat(await fetchRSS(src));
+}
+
+all.sort((a,b)=>new Date(b.date)-new Date(a.date));
+
+all.slice(0,25).forEach(n=>{
+
+const div=document.createElement("div");
+div.className="news";
+
+div.innerHTML=`
+${n.img?`<img src="${n.img}">`:""}
+<div>
+<a href="${n.link}" target="_blank">${n.title}</a>
+<div class="meta">
+${new Date(n.date).toLocaleString()}
+</div>
+</div>
+`;
+
+box.appendChild(div);
+});
+
+status.textContent="Обновлено: "+new Date().toLocaleTimeString();
+}
+
+loadNews();
+setInterval(loadNews,600000);
+
+</script>
+
+</body>
+</html>
