@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>News Feed 3.0</title>
+
+<style>
+
+:root{
+--bg:#ffffff;
+--text:#111;
+--card:#f1f5f9;
+--accent:#2563eb;
+}
+
+body.dark{
+--bg:#0f172a;
+--text:#fff;
+--card:#1e293b;
+--accent:#60a5fa;
+}
+
+body{
+margin:0;
+font-family:system-ui;
+background:var(--bg);
+color:var(--text);
+transition:.25s;
+}
+
+header{
+display:flex;
+flex-wrap:wrap;
+gap:10px;
+justify-content:space-between;
+align-items:center;
+padding:15px;
+border-bottom:1px solid #ccc3;
+}
+
+.controls{
+display:flex;
+gap:8px;
+flex-wrap:wrap;
+}
+
+button,input,select{
+padding:8px;
+border-radius:8px;
+border:none;
+}
+
+button{
+background:var(--accent);
+color:white;
+cursor:pointer;
+}
+
+.container{
+max-width:900px;
+margin:auto;
+padding:12px;
+}
+
+.news{
+display:flex;
+gap:14px;
+background:var(--card);
+margin:12px 0;
+padding:14px;
+border-radius:10px;
+}
+
+.news img{
+width:130px;
+height:90px;
+object-fit:cover;
+border-radius:8px;
+}
+
+.news a{
+color:var(--accent);
+font-weight:bold;
+text-decoration:none;
+}
+
+.meta{
+opacity:.6;
+font-size:13px;
+margin-top:6px;
+}
+
+#status{
+text-align:center;
+opacity:.6;
+margin:10px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+
+<div>📰 News Feed 3.0</div>
+
+<div class="controls">
+
+<input id="search" placeholder="Поиск новостей...">
+
+<select id="category">
+<option value="all">Все</option>
+<option value="world">Мир</option>
+<option value="ru">Россия</option>
+<option value="tech">Технологии</option>
+</select>
+
+<button onclick="toggleTheme()">🌗</button> <button onclick="loadNews(true)">↻</button>
+
+</div>
+
+</header>
+
+<div id="status">Загрузка...</div>
+<div class="container" id="news"></div>
+
+<script>
+
+/* THEME */
+
+if(localStorage.theme==="dark")
+document.body.classList.add("dark");
+
+function toggleTheme(){
+document.body.classList.toggle("dark");
+localStorage.theme=document.body.classList.contains("dark")?"dark":"light";
+}
+
+/* SOURCES */
+
+const SOURCES=[
+{url:"https://feeds.bbci.co.uk/news/rss.xml",cat:"world"},
+{url:"https://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml",cat:"world"},
+{url:"https://lenta.ru/rss",cat:"ru"},
+{url:"https://www.gazeta.ru/export/rss/lenta.xml",cat:"ru"},
+{url:"https://rss.nytimes.com/services/xml/rss/nyt/Technology.xml",cat:"tech"}
+];
+
+const PROXY=u=>"https://api.allorigins.win/raw?url="+encodeURIComponent(u);
+
+/* IMAGE */
+
+function extractImage(item){
+
+let img=
+item.querySelector("media\\:content")?.getAttribute("url")||
+item.querySelector("media\\:thumbnail")?.getAttribute("url")||
+item.querySelector("enclosure")?.getAttribute("url");
+
+if(img) return img;
+
+const d=item.querySelector("description")?.textContent||"";
+const m=d.match(/<img.*?src="(.*?)"/);
+
+return m?m[1]:null;
+}
+
+/* FETCH */
+
+async function fetchRSS(src){
+
+try{
+const res=await fetch(PROXY(src.url));
+const text=await res.text();
+
+if(text.includes("<html")) return [];
+
+const xml=new DOMParser()
+.parseFromString(text,"text/xml");
+
+return [...xml.querySelectorAll("item")].map(item=>({
+
+title:item.querySelector("title")?.textContent,
+link:item.querySelector("link")?.textContent,
+date:item.querySelector("pubDate")?.textContent,
+img:extractImage(item),
+cat:src.cat
+
+}));
+
+}catch{
+return [];
+}
+}
+
+/* CACHE */
+
+function saveCache(data){
+localStorage.newsCache=JSON.stringify({
+time:Date.now(),
+data
+});
+}
+
+function loadCache(){
+
+if(!localStorage.newsCache) return null;
+
+const cache=JSON.parse(localStorage.newsCache);
+
+if(Date.now()-cache.time>10*60*1000)
+return null;
+
+return cache.data;
+}
+
+/* LOAD */
+
+let ALL_NEWS=[];
+
+async function loadNews(force=false){
+
+const status=document.getElementById("status");
+
+if(!force){
+const cache=loadCache();
+if(cache){
+ALL_NEWS=cache;
+render();
+status.textContent="Загружено из кеша";
+return;
+}
+}
+
+status.textContent="Загрузка новостей...";
+
+const results=await Promise.all(
+SOURCES.map(fetchRSS)
+);
+
+ALL_NEWS=results.flat()
+.sort((a,b)=>new Date(b.date)-new Date(a.date));
+
+saveCache(ALL_NEWS);
+
+render();
+
+status.textContent="Обновлено: "+new Date().toLocaleTimeString();
+}
+
+/* RENDER */
+
+function render(){
+
+const box=document.getElementById("news");
+const search=document.getElementById("search").value.toLowerCase();
+const cat=document.getElementById("category").value;
+
+box.innerHTML="";
+
+ALL_NEWS
+.filter(n=>
+(cat==="all"||n.cat===cat)&&
+n.title.toLowerCase().includes(search)
+)
+.slice(0,40)
+.forEach(n=>{
+
+const div=document.createElement("div");
+div.className="news";
+
+div.innerHTML=`
+<img loading="lazy"
+src="${n.img||'https://via.placeholder.com/130x90?text=News'}">
+<div>
+<a href="${n.link}" target="_blank">${n.title}</a>
+<div class="meta">
+${new Date(n.date).toLocaleString()}
+</div>
+</div>
+`;
+
+box.appendChild(div);
+});
+}
+
+document.getElementById("search").oninput=render;
+document.getElementById("category").onchange=render;
+
+loadNews();
+setInterval(()=>loadNews(true),600000);
+
+</script>
+
+</body>
+</html>
